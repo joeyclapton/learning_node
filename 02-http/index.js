@@ -3,7 +3,11 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("testando");
+  const { name } = req.query;
+  const showName = name ? ", " + name : "";
+
+  //res.send(`Good morning${showName}`);
+  res.send(req.query);
 });
 
 app.get("/about", (req, res) => {
