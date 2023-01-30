@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
-  res.send("<pre>About me</pre>");
+  res.sendFile(__dirname + "/templates/greetings.html");
 });
 
 app.listen(8080);
