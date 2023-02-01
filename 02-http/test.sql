@@ -16,3 +16,4 @@ DELETE FROM user WHERE age <= 20;
 
 UPDATE user SET mail = "danielazanette@gmail.com" WHERE name = "Daniela" ;
 UPDATE user SET mail = "joeycmc@gmail.com", name = "Joey Clapton M B Santos" WHERE name = "Joey Clapton";
+
