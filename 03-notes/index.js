@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = 3001;
 
+app.use(express.json());
+
 let notes = [
   {
     id: 1,
@@ -19,6 +21,17 @@ let notes = [
     important: true,
   },
 ];
+
+app.get("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const note = notes.find((note) => note.id === id);
+
+  if (note) {
+    response.json(note);
+  } else {
+    response.status(404).end();
+  }
+});
 
 app.listen(PORT);
 
