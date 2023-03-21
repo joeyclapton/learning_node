@@ -1,4 +1,6 @@
-const http = require("http");
+const express = require("express");
+const app = express();
+const PORT = 3001;
 
 let notes = [
   {
@@ -17,13 +19,6 @@ let notes = [
     important: true,
   },
 ];
-
-const app = http.createServer((request, response) => {
-  response.writeHead(200, { "Content-Type": "application/json" });
-  response.end(JSON.stringify(notes));
-});
-
-const PORT = 3001;
 
 app.listen(PORT);
 
