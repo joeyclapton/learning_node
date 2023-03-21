@@ -33,6 +33,19 @@ app.get("/api/notes/:id", (request, response) => {
   }
 });
 
+app.delete("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const hasNote = notes.find((note) => note.id === id);
+
+  if (hasNote) {
+    const updatedNotes = notes.filter((note) => note.id !== id);
+    notes = updatedNotes;
+    response.json(notes);
+  } else {
+    response.status(204).end();
+  }
+});
+
 app.listen(PORT);
 
 console.log("Server running on PORT " + PORT);
