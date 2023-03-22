@@ -46,6 +46,14 @@ app.delete("/api/notes/:id", (request, response) => {
   }
 });
 
+app.post("/api/notes", (request, response) => {
+  const note = request.body;
+
+  notes.push(note);
+
+  response.status(200).json(notes);
+});
+
 app.listen(PORT);
 
 console.log("Server running on PORT " + PORT);
