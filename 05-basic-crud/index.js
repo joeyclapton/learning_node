@@ -1,8 +1,18 @@
-let data = require("./mockup");
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
+
+let data = require("./mockup");
+
+morgan("tiny");
+
+function log(req, res, next) {
+  morgan(":method :url :status :res[content-length] - :response-time ms");
+  next();
+}
 
 app.use(express.json());
+app.use(log);
 
 const getNextId = () => {
   const id = Math.max(...data.map((p) => p.id));
@@ -18,13 +28,7 @@ app.get("/info", (req, res) => {
   const dateTime = new Date();
   const size = data.length;
   const info = `Phonebook has info for ${size} people`;
-  const hasId = data.find((p) => p.id === id);
 
-  if (!hasId) {
-    return res.status(400).json({
-      error: `id: ${id} not found`,
-    });
-  }
   res.json({
     content: info,
     dateTime,
