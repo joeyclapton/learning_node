@@ -1,85 +1,87 @@
-const data = require('./mockup')
-const express = require('express')
-const app = express()
+let data = require("./mockup");
+const express = require("express");
+const app = express();
 
-app.use(express.json())
-
-const idNotFound = (id, res) => {
-  console.log(id)
-   if(!id) {
-    return res.status(400).json({
-      error: `id: ${id} not found`
-    })
-  }
-}
+app.use(express.json());
 
 const getNextId = () => {
-  const id = Math.max(...peoples.map(p => p.id))
+  const id = Math.max(...data.map((p) => p.id));
 
   return id + 1;
-}
+};
 
-app.get('/api/persons', (req, res) => {
-  res.status(200).json(data)
-})
+app.get("/api/persons", (req, res) => {
+  res.status(200).json(data);
+});
 
-app.get('/info', (req, res) => {
-  const dateTime = new Date()
-  const size = data.length
-  const info = `Phonebook has info for ${size} people`
+app.get("/info", (req, res) => {
+  const dateTime = new Date();
+  const size = data.length;
+  const info = `Phonebook has info for ${size} people`;
+  const hasId = data.find((p) => p.id === id);
 
-  res.send(info)
-  res.send(datetime)
-})
+  if (!hasId) {
+    return res.status(400).json({
+      error: `id: ${id} not found`,
+    });
+  }
+  res.json({
+    content: info,
+    dateTime,
+  });
+});
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-
-  idNotFound(id, res);
-  
-  const person = data.find(p => p.id === id)
-  
-  res.status(200).json(person)
-})
-
-app.delete('/api/persons:id', (req, res) => {
-  const id = Number(req.params.id)
+app.get("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
 
   idNotFound(id, res);
+  const person = data.find((p) => p.id === id);
 
-  const personsUpdated = persons.filter(p => p.id !== id);
+  res.status(200).json(person);
+});
 
-  res.status(200).json(personsUpdated)
-})
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const hasId = data.find((p) => p.id === id);
 
-app.post('/api/persons', (req, res) => {
+  if (!hasId) {
+    return res.status(400).json({
+      error: `id: ${id} not found`,
+    });
+  }
+  const personsUpdated = data.filter((p) => p.id !== id);
+
+  data = personsUpdated;
+  console.log(data);
+
+  res.status(200).json(personsUpdated);
+});
+
+app.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
 
-  if(!name || !number) {
-    res.status(400).json({
-      error: 'Invalid fields values'
-    })
-
+  if (!name || !number) {
+    return res.status(400).json({
+      error: "Invalid fields values",
+    });
   }
-  const hasPeopleOnList = data.some(p => p.name === name)
+  const hasPeopleOnList = data.some((p) => p.name === name);
 
-  if(hasPeopleOnList) {
-    return res.status(400).json({ 
-      error: 'name must be unique' 
-    })
+  if (hasPeopleOnList) {
+    return res.status(400).json({
+      error: "name must be unique",
+    });
   }
 
   const newPeople = {
     name,
     number,
-    id: getNextId()
-  }
+    id: getNextId(),
+  };
 
-  data.push(newPeoples)
-  return  res.status(200).json(data)
+  data.push(newPeople);
+  return res.status(200).json(data);
+});
 
-
-})
-
-app.listen(3001)
-console.log('server listening or port 3001')
+app.listen(3001);
+console.log("server listening or port 3001");
